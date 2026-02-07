@@ -1,6 +1,10 @@
 import os
 import subprocess
 import shutil
+import os
+
+REPO_CLONER_DIR = os.getenv("REPO_CLONER_DIR", "output")
+
 
 def validate_url(url):
     if "https://github.com/" in url:

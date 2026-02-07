@@ -10,3 +10,7 @@ wheels/
 .venv
 
 .python-version
+
+.env
+
+output/
