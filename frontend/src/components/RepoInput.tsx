@@ -1,24 +1,69 @@
 import { useState } from 'react'
 import './RepoInput.css'
 
+interface AnalysisResponse {
+  status: string
+  message: string
+  data: unknown
+}
+
 function RepoInput() {
   const [repoUrl, setRepoUrl] = useState('')
   const [description, setDescription] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!repoUrl.trim()) return
 
     setIsLoading(true)
+    setError(null)
+    setSuccess(false)
 
-    // TODO: Connect to backend API
-    console.log('Submitting:', { repoUrl, description })
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+      
+      const response = await fetch(`${apiBaseUrl}/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          repo_url: repoUrl,
+          query: description || null,
+        }),
+      })
 
-    setTimeout(() => {
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status} ${response.statusText}`)
+      }
+
+      const data: AnalysisResponse = await response.json()
+      
+      // Log the response for validation
+      console.log('✅ Analysis Response:', data)
+      console.log('📊 Response Data:', data.data)
+      
+      setSuccess(true)
+      
+      // Reset form after successful submission
+      setRepoUrl('')
+      setDescription('')
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(false)
+      }, 3000)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+      console.error('❌ Error:', errorMessage)
+      setError(errorMessage)
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   const isValid = repoUrl.trim().length > 0
@@ -51,6 +96,18 @@ function RepoInput() {
               disabled={isLoading}
             />
           </div>
+
+          {error && (
+            <div className="repo-input-error">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="repo-input-success">
+              ✓ Repository analyzed successfully! Check the console for details.
+            </div>
+          )}
 
           <button
             type="submit"

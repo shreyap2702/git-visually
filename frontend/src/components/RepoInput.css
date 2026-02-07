@@ -117,6 +117,28 @@
   text-align: center;
 }
 
+.repo-input-error {
+  padding: 12px 16px;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  color: #c33;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.repo-input-success {
+  padding: 12px 16px;
+  background-color: #efe;
+  border: 1px solid #cfc;
+  border-radius: 4px;
+  color: #3c3;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .repo-input-section {
     padding: 40px 20px;
