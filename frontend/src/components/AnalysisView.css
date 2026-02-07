@@ -1,0 +1,238 @@
+.analysis-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+.analysis-view-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  gap: 0;
+}
+
+.analysis-view-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  border-right: 1px solid #e8e8e6;
+}
+
+.analysis-view-loading,
+.analysis-view-error,
+.analysis-view-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px;
+  text-align: center;
+}
+
+.analysis-view-loading {
+  gap: 20px;
+}
+
+.analysis-loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e8e8e6;
+  border-top-color: #2a2a2a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.analysis-view-loading p {
+  font-size: 14px;
+  color: #6b6b6b;
+  margin: 0;
+}
+
+.analysis-view-error {
+  gap: 16px;
+}
+
+.analysis-view-error h3 {
+  font-family: 'CooperLtBT', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #dc2626;
+  margin: 0;
+  letter-spacing: -0.1px;
+}
+
+.analysis-view-error p {
+  font-size: 13px;
+  color: #6b6b6b;
+  margin: 0;
+  max-width: 400px;
+}
+
+.analysis-error-retry {
+  padding: 8px 16px;
+  background-color: #ffffff;
+  border: 1px solid #e8e8e6;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #2a2a2a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.analysis-error-retry:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.analysis-view-empty {
+  gap: 12px;
+  color: #9a9a9a;
+}
+
+.analysis-view-empty p {
+  font-size: 14px;
+  margin: 0;
+  font-style: italic;
+}
+
+.analysis-view-sidebar {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  overflow: hidden;
+}
+
+.analysis-view-header {
+  padding: 24px;
+  border-bottom: 1px solid #e8e8e6;
+  background-color: #ffffff;
+}
+
+.analysis-view-header h2 {
+  font-family: 'CooperLtBT', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #2a2a2a;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.1px;
+}
+
+.analysis-repo-path {
+  font-size: 12px;
+  color: #9a9a9a;
+  margin: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  word-break: break-all;
+}
+
+.analysis-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid #e8e8e6;
+  background-color: #ffffff;
+}
+
+.analysis-input-textarea {
+  flex: 1;
+  min-height: 80px;
+  max-height: 120px;
+  padding: 10px;
+  border: 1px solid #e8e8e6;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #2a2a2a;
+  resize: vertical;
+  background-color: #ffffff;
+}
+
+.analysis-input-textarea:focus {
+  outline: none;
+  border-color: #2a2a2a;
+}
+
+.analysis-input-textarea::placeholder {
+  color: #b0b0b0;
+}
+
+.analysis-input-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.analysis-submit-button {
+  padding: 10px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.analysis-submit-button:hover:not(:disabled) {
+  background-color: #1a1a1a;
+}
+
+.analysis-submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Message Thread Container */
+.analysis-view-sidebar > div:nth-child(3) {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+@media (max-width: 1024px) {
+  .analysis-view-container {
+    flex-direction: column;
+  }
+
+  .analysis-view-main {
+    flex: 1;
+    border-right: none;
+    border-bottom: 1px solid #e8e8e6;
+  }
+
+  .analysis-view-sidebar {
+    width: 100%;
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .analysis-view-sidebar {
+    width: 100%;
+    height: 250px;
+  }
+
+  .analysis-view-header {
+    padding: 16px;
+  }
+
+  .analysis-input-form {
+    padding: 12px;
+  }
+
+  .analysis-input-textarea {
+    min-height: 60px;
+  }
+}

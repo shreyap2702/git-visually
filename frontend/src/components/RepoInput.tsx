@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAnalysis } from '@/contexts/AnalysisContext'
 import './RepoInput.css'
 
 interface AnalysisResponse {
@@ -7,11 +8,16 @@ interface AnalysisResponse {
   data: unknown
 }
 
-function RepoInput() {
+interface RepoInputProps {
+  onAnalysisComplete?: () => void
+}
+
+function RepoInput({ onAnalysisComplete }: RepoInputProps) {
+  const { setRepoData, setError } = useAnalysis()
   const [repoUrl, setRepoUrl] = useState('')
   const [description, setDescription] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoadingLocal] = useState(false)
+  const [error, setErrorLocal] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,8 +25,8 @@ function RepoInput() {
 
     if (!repoUrl.trim()) return
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoadingLocal(true)
+    setErrorLocal(null)
     setSuccess(false)
 
     try {
@@ -47,7 +53,12 @@ function RepoInput() {
       console.log('✅ Analysis Response:', data)
       console.log('📊 Response Data:', data.data)
       
+      // Store in analysis context
+      setRepoData(repoUrl, description, data.data)
       setSuccess(true)
+      
+      // Call completion callback
+      onAnalysisComplete?.()
       
       // Reset form after successful submission
       setRepoUrl('')
@@ -60,9 +71,10 @@ function RepoInput() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
       console.error('❌ Error:', errorMessage)
+      setErrorLocal(errorMessage)
       setError(errorMessage)
     } finally {
-      setIsLoading(false)
+      setIsLoadingLocal(false)
     }
   }
 

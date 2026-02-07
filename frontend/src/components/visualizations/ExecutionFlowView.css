@@ -1,0 +1,133 @@
+.execution-flow-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e8e8e6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.execution-flow-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  border-bottom: 1px solid #e8e8e6;
+  background-color: #fafafa;
+}
+
+.execution-flow-title {
+  font-family: 'CooperLtBT', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #2a2a2a;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.execution-flow-description {
+  font-size: 13px;
+  color: #6b6b6b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.execution-flow-canvas-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: auto;
+  background-color: #ffffff;
+}
+
+.execution-flow-canvas {
+  border: 1px solid #e8e8e6;
+  border-radius: 4px;
+  background-color: #ffffff;
+  max-width: 100%;
+  height: auto;
+}
+
+.execution-flow-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e8e8e6;
+  background-color: #fafafa;
+}
+
+.execution-flow-legend-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2a2a2a;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.execution-flow-legend-items {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.execution-flow-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.execution-flow-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.execution-flow-legend-label {
+  color: #2a2a2a;
+  font-weight: 500;
+}
+
+.execution-flow-legend-count {
+  color: #9a9a9a;
+  font-size: 11px;
+}
+
+.execution-flow-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #9a9a9a;
+  text-align: center;
+  font-size: 16px;
+  font-style: italic;
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .execution-flow-canvas-wrapper {
+    padding: 16px;
+  }
+
+  .execution-flow-header {
+    padding: 16px;
+  }
+
+  .execution-flow-legend {
+    padding: 12px 16px;
+  }
+
+  .execution-flow-legend-items {
+    gap: 12px;
+    flex-direction: column;
+  }
+}
