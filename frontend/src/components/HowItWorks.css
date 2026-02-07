@@ -1,0 +1,74 @@
+.how-it-works {
+  padding: 60px 0;
+  background-color: #ffffff;
+}
+
+.how-it-works-container {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.how-it-works-title {
+  font-size: 28px;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 50px;
+  color: #2a2a2a;
+  letter-spacing: -0.3px;
+}
+
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 900px;
+}
+
+.how-it-works-step {
+  text-align: center;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #efefed;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 400;
+  color: #2a2a2a;
+  margin-bottom: 20px;
+  border: 1px solid #e8e8e6;
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #2a2a2a;
+}
+
+.step-description {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b6b6b;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .how-it-works {
+    padding: 40px 20px;
+  }
+
+  .how-it-works-title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .how-it-works-grid {
+    gap: 30px;
+  }
+}

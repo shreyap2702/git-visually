@@ -1,0 +1,136 @@
+.repo-input-section {
+  padding: 40px 0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #e8e8e6;
+}
+
+.repo-input-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.repo-input-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+.repo-input-field-group:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.repo-input-label {
+  display: block;
+  font-family: 'CooperLightBT', 'CooperLtBT', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2a2a2a;
+}
+
+.repo-input-field {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid #e8e8e6;
+  font-size: 15px;
+  font-family: 'CooperLtBT', inherit;
+  background-color: transparent;
+  color: #2a2a2a;
+  transition: all 0.2s ease;
+}
+
+.repo-input-field:focus {
+  outline: none;
+  border-bottom-color: #2a2a2a;
+}
+
+.repo-input-field::placeholder {
+  color: #b0b0b0;
+}
+
+.repo-input-textarea {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid #e8e8e6;
+  font-size: 15px;
+  font-family: 'CooperLtBT', inherit;
+  background-color: transparent;
+  color: #2a2a2a;
+  resize: none;
+  min-height: 80px;
+  transition: all 0.2s ease;
+}
+
+.repo-input-textarea:focus {
+  outline: none;
+  border-bottom-color: #2a2a2a;
+}
+
+.repo-input-textarea::placeholder {
+  color: #b0b0b0;
+}
+
+.repo-input-button {
+  width: 100%;
+  padding: 14px 0;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.repo-input-button:hover {
+  background-color: #1a1a1a;
+  transform: translateY(-1px);
+}
+
+.repo-input-button:active {
+  transform: translateY(0);
+}
+
+.repo-input-button:disabled {
+  background-color: #e0e0de;
+  color: #9a9a9a;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.repo-input-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #9a9a9a;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .repo-input-section {
+    padding: 40px 20px;
+  }
+
+  .repo-input-card {
+    padding: 30px 20px;
+  }
+
+  .repo-input-label {
+    font-size: 15px;
+  }
+
+  .repo-input-field {
+    font-size: 16px;
+  }
+}

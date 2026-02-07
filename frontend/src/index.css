@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'CooperLtBT';
+  src: url('/fonts/Cooper Lt BT Bold.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CooperLightBT';
+  src: url('/fonts/CooperLightBT.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'CooperLtBT', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #ffffff;
+  color: #2a2a2a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#root::before,
+#root::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, #e8e8e6 0%, #d0d0ce 25%, #c0c0be 50%, #d0d0ce 75%, #e8e8e6 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+#root::before {
+  left: 50%;
+  transform: translateX(-500px);
+}
+
+#root::after {
+  right: 50%;
+  transform: translateX(500px);
+}
+
+body {
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: 'CooperLtBT', inherit;
+}
