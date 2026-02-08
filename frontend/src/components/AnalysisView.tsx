@@ -35,12 +35,6 @@ function AnalysisView() {
     return () => clearTimeout(timeoutId)
   }, [isWaiting, isIdle, latestRenderedComponent])
 
-  // Debug logging
-  useEffect(() => {
-    console.log('[AnalysisView] thread changed:', thread)
-    console.log('[AnalysisView] latestRenderedComponent:', latestRenderedComponent)
-  }, [thread, latestRenderedComponent])
-
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -50,19 +44,84 @@ function AnalysisView() {
   // We use a ref to track if we've initialized to avoid double-sending
   const hasInitialized = useRef(false)
 
+  // Helper for smart truncation to preserve JSON structure
+  const smartTruncate = (obj: any, maxStringLen = 500, maxArrayLen = 50): any => {
+    if (typeof obj === 'string') {
+      return obj.length > maxStringLen ? obj.substring(0, maxStringLen) + '...[TRUNCATED]' : obj
+    }
+    if (Array.isArray(obj)) {
+      const truncated = obj.slice(0, maxArrayLen).map(item => smartTruncate(item, maxStringLen, maxArrayLen))
+      if (obj.length > maxArrayLen) {
+        truncated.push(`...[${obj.length - maxArrayLen} more items]`)
+      }
+      return truncated
+    }
+    if (typeof obj === 'object' && obj !== null) {
+      const newObj: any = {}
+      for (const key in obj) {
+        newObj[key] = smartTruncate(obj[key], maxStringLen, maxArrayLen)
+      }
+      return newObj
+    }
+    return obj
+  }
+
   useEffect(() => {
     // Only initialize if we have backend data and haven't done so yet
     if (!hasInitialized.current && state.backendJson && sendThreadMessage) {
       console.log('[AnalysisView] Initializing analysis with backend data')
       hasInitialized.current = true
 
+      // Smart truncate the backend JSON to prevent context window issues while keeping structure
+      const truncatedObj = smartTruncate(state.backendJson)
+      const truncatedJson = JSON.stringify(truncatedObj, null, 2)
+
       const initialContext = `You are a Generative UI assistant analyzing a Git repository.
       
 Repository: ${state.repoUrl}
 Initial Query: ${state.query}
-Backend Analysis: ${JSON.stringify(state.backendJson, null, 2)}
+Backend Analysis: ${truncatedJson}
 
-CRITICAL INSTRUCTION: You MUST select and render one of the available visualization components (DependencyGraph, FunctionExplorer, ExecutionFlowView) to help the user understand the repository. Do NOT provide a text-only response. ALWAYS render a component that best fits the query or provides a good overview.`
+CRITICAL INSTRUCTION: You MUST select and render one of the available visualization components to help the user understand the repository.
+
+AVAILABLE COMPONENTS:
+
+1. DependencyGraph
+   - Use for: Visualizing file dependencies, architectural structure, or module relationships.
+   - Props:
+     - nodes: { 
+         id: string, 
+         label: string, 
+         language: string, 
+         type: 'file',
+         lines?: number,
+         functionCount?: number,
+         dependencyCount?: number,
+         externalLibs?: string[]
+       }[]
+     - edges: { source: string, target: string, type: 'import' | 'require' | 'internal' }[]
+
+2. FunctionExplorer
+   - Use for: Deep diving into a specific file, exploring methods, classes, and code logic.
+   - Props:
+     - filePath: string
+     - fileName: string
+     - language: string
+     - functions: { name: string, signature: string, startLine: number, endLine: number, code: string }[]
+
+3. ExecutionFlowView
+   - Use for: Showing high-level data flow between system layers (e.g., Frontend -> API -> Database).
+   - Props:
+     - layers: { id: string, name: string, files: string[] }[]
+     - flows: { from: string, to: string, label: string }[]
+
+USAGE:
+- Analyze the "Backend Analysis" JSON to extract relevant data.
+- Choose the component that best fits the user's intent or provides the best overview.
+- Populate the component props using data from the backend analysis.
+- **IMPORTANT**: If explicit dependency edges are not listed in the JSON, you MUST INFER them from file imports, requires, or usages described in the analysis.
+- Do NOT make up data that isn't supported by the analysis (e.g., don't invent files), but DO infer relationships.
+- ALWAYS render a graphical component if possible.`
 
       // Determine the prompt to send
       const prompt = state.query
@@ -73,17 +132,28 @@ CRITICAL INSTRUCTION: You MUST select and render one of the available visualizat
       console.log('[AnalysisView] Sending initial prompt:', prompt)
       setIsWaiting(true)
 
-      // Send the initial context + prompt to Tambo using sendThreadMessage
-      sendThreadMessage(fullMessage, { streamResponse: true })
-        .then(() => {
+      // Send initial message with retry logic
+      const sendInitialMessage = async (attemptsLeft = 1) => {
+        try {
+          await sendThreadMessage(fullMessage, { streamResponse: true })
           console.log('[AnalysisView] Initial message send completed')
           setIsWaiting(false)
-        })
-        .catch(err => {
-          console.error("[AnalysisView] Failed to send initial query:", err)
-          setError("Failed to start analysis. Please try sending a message.")
-          setIsWaiting(false)
-        })
+        } catch (err) {
+          console.warn(`[AnalysisView] Initial message failed, attempts left: ${attemptsLeft}`, err)
+          if (attemptsLeft > 0) {
+            setTimeout(() => sendInitialMessage(attemptsLeft - 1), 2000)
+          } else {
+            console.error("[AnalysisView] Failed to send initial query after retries:", err)
+            // Extract useful error message
+            const msg = err instanceof Error ? err.message : String(err)
+            // If it's a 500/internal error, suggest retrying manually
+            setError(`Failed to start analysis: ${msg}. Please try sending a message manually.`)
+            setIsWaiting(false)
+          }
+        }
+      }
+
+      sendInitialMessage()
     }
   }, [state.backendJson, state.repoUrl, state.query, sendThreadMessage, setError])
 
@@ -127,12 +197,14 @@ CRITICAL INSTRUCTION: You MUST select and render one of the available visualizat
       <div className="analysis-view-container">
         {/* Main Content Area */}
         <div className="analysis-view-main">
-          {showLoading ? (
+          {showLoading && (
             <div className="analysis-view-loading">
               <div className="analysis-loading-spinner"></div>
               <p>{isGenerating ? 'Generating visualization...' : isWaiting ? 'Processing...' : 'Analyzing repository...'}</p>
             </div>
-          ) : (state.error || generationError) ? (
+          )}
+
+          {!showLoading && (state.error || generationError) && (
             <div className="analysis-view-error">
               <h3>Error</h3>
               <p>{state.error || generationError}</p>
@@ -143,13 +215,15 @@ CRITICAL INSTRUCTION: You MUST select and render one of the available visualizat
                 Dismiss
               </button>
             </div>
-          ) : latestRenderedComponent ? (
-            // Tambo returns a pre-rendered React element, just render it directly
+          )}
+
+          {!showLoading && !(state.error || generationError) && latestRenderedComponent && (
             <div className="analysis-layout">
               {latestRenderedComponent}
             </div>
-          ) : (
-            // Fallback if analysis is done but no component - e.g. text only response
+          )}
+
+          {!showLoading && !(state.error || generationError) && !latestRenderedComponent && (
             <div className="analysis-view-empty">
               <p>Analysis complete. Ask a question to visualize specific parts.</p>
             </div>

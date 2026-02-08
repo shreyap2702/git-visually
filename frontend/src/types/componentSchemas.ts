@@ -18,42 +18,42 @@ export const LANGUAGE_COLORS: Record<string, string> = {
   html: '#e34c26',
   css: '#563d7c',
   scss: '#c6538c',
-  
+
   // Python
   python: '#3776ab',
-  
+
   // Java
   java: '#007396',
   kotlin: '#7f52ff',
-  
+
   // C/C++/C#
   c: '#a8b9cc',
   cpp: '#00599c',
   'c++': '#00599c',
   csharp: '#239120',
-  
+
   // Go
   go: '#00add8',
-  
+
   // Rust
   rust: '#ce422b',
-  
+
   // Ruby
   ruby: '#cc342d',
-  
+
   // PHP
   php: '#777bb4',
-  
+
   // Shell/Bash
   shell: '#4ee745',
   bash: '#4ee745',
-  
+
   // Config/Data
   json: '#f7df1e',
   yaml: '#cb171e',
   toml: '#9c4221',
   xml: '#0078d4',
-  
+
   // Default
   default: '#9a9a9a',
 }
@@ -73,6 +73,11 @@ export const DependencyGraphNodeSchema = z.object({
   filePath: z.string().describe('Full file path for reference'),
   language: z.string().describe('Programming language of the file'),
   type: z.enum(['file']).describe('Type of node (currently only "file")'),
+  // Metadata for table and hover
+  lines: z.number().optional().describe('Number of lines of code'),
+  functionCount: z.number().optional().describe('Number of functions in the file'),
+  dependencyCount: z.number().optional().describe('Number of imported dependencies'),
+  externalLibs: z.array(z.string()).optional().describe('List of external libraries used'),
 })
 
 export const DependencyGraphEdgeSchema = z.object({

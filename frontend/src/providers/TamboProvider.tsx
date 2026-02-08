@@ -11,7 +11,7 @@ interface TamboProviderProps {
  * Wraps the application with the official TamboSDKProvider and registers components.
  */
 export function TamboProvider({ children }: TamboProviderProps) {
-  const apiKey = import.meta.env.VITE_TAMBO_API_KEY
+  const apiKey = import.meta.env.VITE_TAMBO_API_KEY || ''
   // Use default model if not specified
   const model = import.meta.env.VITE_TAMBO_MODEL // Optional, SDK has defaults
 
