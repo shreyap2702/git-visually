@@ -31,7 +31,7 @@ function RepoInput({ onAnalysisComplete }: RepoInputProps) {
 
     try {
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-      
+
       const response = await fetch(`${apiBaseUrl}/analyze`, {
         method: 'POST',
         headers: {
@@ -48,26 +48,24 @@ function RepoInput({ onAnalysisComplete }: RepoInputProps) {
       }
 
       const data: AnalysisResponse = await response.json()
-      
+
       // Log the response for validation
       console.log('✅ Analysis Response:', data)
       console.log('📊 Response Data:', data.data)
-      
+
       // Store in analysis context
       setRepoData(repoUrl, description, data.data)
       setSuccess(true)
-      
-      // Call completion callback
-      onAnalysisComplete?.()
-      
-      // Reset form after successful submission
+
+      // Reset form options
       setRepoUrl('')
       setDescription('')
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccess(false)
-      }, 3000)
+
+      // Call completion callback immediately so parent can switch view
+      if (onAnalysisComplete) {
+        onAnalysisComplete()
+      }
+
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
       console.error('❌ Error:', errorMessage)
@@ -117,7 +115,7 @@ function RepoInput({ onAnalysisComplete }: RepoInputProps) {
 
           {success && (
             <div className="repo-input-success">
-              ✓ Repository analyzed successfully! Check the console for details.
+              ✓ Repository analyzed successfully!
             </div>
           )}
 
