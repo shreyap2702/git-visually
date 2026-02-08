@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useAnalysis } from '@/contexts/AnalysisContext'
 import './RepoInput.css'
 
+// Backend returns this structure directly from /analyze endpoint
 interface AnalysisResponse {
-  status: string
-  message: string
-  data: unknown
+  repo_url: string
+  user_intent: string
+  analysis: unknown
 }
 
 interface RepoInputProps {
@@ -51,10 +52,10 @@ function RepoInput({ onAnalysisComplete }: RepoInputProps) {
 
       // Log the response for validation
       console.log('✅ Analysis Response:', data)
-      console.log('📊 Response Data:', data.data)
+      console.log('📊 Analysis Data:', data.analysis)
 
-      // Store in analysis context
-      setRepoData(repoUrl, description, data.data)
+      // Store in analysis context - backend returns { repo_url, user_intent, analysis }
+      setRepoData(repoUrl, description, data.analysis)
       setSuccess(true)
 
       // Reset form options
